@@ -9,6 +9,20 @@ readme = "README.md"
 python = "^3.10"
 hdwallet = "2.2.1"
 
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.991"
+isort = "^5.11.3"
+black = "^22.12.0"
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+
+[tool.isort]
+profile="black"
+
+[tool.black]
+line-length = 88
 
 [build-system]
 requires = ["poetry-core"]
