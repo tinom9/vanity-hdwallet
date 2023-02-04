@@ -14,6 +14,7 @@ case_sensitive = args.case_sensitive
 
 hdwallet = HDWallet(symbol=ETH, use_default_path=True)
 
+
 def calculate_estimated_tries(vanity: str, case_sensitive: bool) -> int:
     options = 22 if case_sensitive else 16
     return options ** len(vanity)
@@ -30,8 +31,13 @@ def generate_hd_wallet() -> tuple[str, dict]:
     return (mnemonic, hdwallet.dumps())
 
 
-def check_wallet_vanity(wallet: dict, vanity: str) -> bool:
-    return wallet["addresses"]["p2pkh"][2 : len(vanity) + 2] == vanity
+def check_wallet_vanity(wallet: dict, vanity: str, case_sensitive: bool) -> bool:
+    address = wallet["addresses"]["p2pkh"]
+    return (
+        address[2 : len(vanity) + 2] == vanity
+        if case_sensitive
+        else address[2 : len(vanity) + 2].lower() == vanity.lower()
+    )
 
 
 def generate_vanity_wallet(vanity: str, case_sensitive: bool) -> None:
@@ -58,7 +64,7 @@ def generate_vanity_wallet(vanity: str, case_sensitive: bool) -> None:
             flush=True,
         )
         mnemonic, wallet = generate_hd_wallet()
-        if check_wallet_vanity(wallet, vanity):
+        if check_wallet_vanity(wallet, vanity, case_sensitive):
             found = True
             print("Vanity address generated!")
             print(mnemonic)
