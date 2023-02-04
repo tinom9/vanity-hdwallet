@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "vanity-hdwallet"
+version = "0.1.0"
+description = "Vanity hierarchical deterministic wallet generator"
+authors = ["Tino Martínez Molina <tino@martinezmolina.es>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+hdwallet = "2.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
