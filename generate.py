@@ -1,8 +1,10 @@
-from hdwallet import HDWallet
-from hdwallet.utils import generate_mnemonic
-from hdwallet.symbols import ETH
-import time
 import argparse
+import re
+import time
+
+from hdwallet import HDWallet
+from hdwallet.symbols import ETH
+from hdwallet.utils import generate_mnemonic
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--vanity", type=str)
@@ -13,6 +15,10 @@ vanity = args.vanity
 case_sensitive = args.case_sensitive
 
 hdwallet = HDWallet(symbol=ETH, use_default_path=True)
+
+
+def check_vanity_validity(vanity: str) -> bool:
+    return bool(re.match(r"^[0-9a-fA-F]{,40}$", vanity))
 
 
 def calculate_estimated_tries(vanity: str, case_sensitive: bool) -> int:
@@ -72,4 +78,7 @@ def generate_vanity_wallet(vanity: str, case_sensitive: bool) -> None:
 
 
 if __name__ == "__main__":
-    generate_vanity_wallet(vanity, case_sensitive)
+    if not check_vanity_validity(vanity):
+        print(f"{vanity} is not a valid vanity.")
+    else:
+        generate_vanity_wallet(vanity, case_sensitive)
