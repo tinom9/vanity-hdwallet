@@ -1,4 +1,5 @@
 import argparse
+import multiprocessing as mp
 import re
 import time
 
@@ -39,11 +40,11 @@ def calculate_estimated_time(estimated_tries: int, tries: int, time_elapsed: flo
     return estimated_tries * time_elapsed / tries if tries else 0
 
 
-def generate_hd_wallet(hdwallet: HDWallet) -> tuple[str, dict]:
+def generate_hd_wallet(hdwallet: HDWallet) -> dict:
     mnemonic = generate_mnemonic()
     hdwallet.clean_derivation()
     hdwallet.from_mnemonic(mnemonic=mnemonic)
-    return (mnemonic, hdwallet.dumps())
+    return hdwallet.dumps()
 
 
 def check_wallet_vanity(wallet: dict, vanity: str, case_sensitive: bool) -> bool:
@@ -60,11 +61,12 @@ def generate_vanity_wallet(vanity: str, case_sensitive: bool) -> None:
     print("Generating vanity wallet\n\n\n\n")
     found = False
     count = 0
+    N = mp.cpu_count()
     hdwallet = HDWallet(symbol=currency, use_default_path=True)
     start_time = time.time()
     estimated_tries = calculate_estimated_tries(currency, vanity, case_sensitive)
     while not found:
-        count += 1
+        count += N
         time_elapsed = time.time() - start_time
         estimated_time = calculate_estimated_time(
             estimated_tries, count - 1, time_elapsed
@@ -80,12 +82,14 @@ def generate_vanity_wallet(vanity: str, case_sensitive: bool) -> None:
             end="\n",
             flush=True,
         )
-        mnemonic, wallet = generate_hd_wallet(hdwallet)
-        if check_wallet_vanity(wallet, vanity, case_sensitive):
-            found = True
-            print("Vanity address generated!")
-            print(mnemonic)
-            print(wallet["addresses"][CURRENCY_ADDRESS_MAP[wallet["symbol"]]])
+        with mp.Pool(processes=N) as p:
+            wallets = p.map(generate_hd_wallet, [hdwallet] * N)
+        for wallet in wallets:
+            if check_wallet_vanity(wallet, vanity, case_sensitive):
+                found = True
+                print("Vanity address generated!")
+                print(wallet["mnemonic"])
+                print(wallet["addresses"][CURRENCY_ADDRESS_MAP[wallet["symbol"]]])
 
 
 if __name__ == "__main__":
