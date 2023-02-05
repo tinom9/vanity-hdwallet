@@ -5,13 +5,12 @@ import time
 from hdwallet import HDWallet
 from hdwallet.symbols import BTC, ETH
 
-from vanityhdwallet.currencies import CURRENCY_ADDRESS_MAP
 from vanityhdwallet.helpers import (
     calculate_estimated_time,
     calculate_estimated_tries,
+    check_address_vanity,
     check_vanity_validity,
-    check_wallet_vanity,
-    generate_hd_wallet,
+    generate_hd_keypair,
 )
 
 parser = argparse.ArgumentParser()
@@ -51,13 +50,13 @@ def generate_vanity_wallet(vanity: str, case_sensitive: bool) -> None:
             flush=True,
         )
         with mp.Pool(processes=N) as p:
-            wallets = p.map(generate_hd_wallet, [hdwallet] * N)
-        for wallet in wallets:
-            if check_wallet_vanity(wallet, vanity, case_sensitive):
+            wallets = p.map(generate_hd_keypair, [hdwallet] * N)
+        for mnemonic, address in wallets:
+            if check_address_vanity(currency, address, vanity, case_sensitive):
                 found = True
                 print("Vanity address generated!")
-                print(wallet["mnemonic"])
-                print(wallet["addresses"][CURRENCY_ADDRESS_MAP[wallet["symbol"]]])
+                print(mnemonic)
+                print(address)
 
 
 if __name__ == "__main__":

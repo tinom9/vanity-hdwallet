@@ -25,16 +25,19 @@ def calculate_estimated_time(estimated_tries: int, tries: int, time_elapsed: flo
     return estimated_tries * time_elapsed / tries if tries else 0
 
 
-def generate_hd_wallet(hdwallet: HDWallet) -> dict:
+def generate_hd_keypair(hdwallet: HDWallet) -> tuple[str, str]:
     mnemonic = generate_mnemonic()
     hdwallet.clean_derivation()
     hdwallet.from_mnemonic(mnemonic=mnemonic)
-    return hdwallet.dumps()
-
-
-def check_wallet_vanity(wallet: dict, vanity: str, case_sensitive: bool) -> bool:
+    wallet = hdwallet.dumps()
     address = wallet["addresses"][CURRENCY_ADDRESS_MAP[wallet["symbol"]]]
-    prefix = CURRENCY_PREFIX_MAP[wallet["symbol"]]
+    return mnemonic, address
+
+
+def check_address_vanity(
+    currency: str, address: str, vanity: str, case_sensitive: bool
+) -> bool:
+    prefix = CURRENCY_PREFIX_MAP[currency]
     generated = address[len(prefix) : len(vanity) + len(prefix)]
     if case_sensitive:
         return generated == vanity
