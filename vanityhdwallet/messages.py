@@ -10,4 +10,4 @@ PROGRESS_MESSAGE = f"\x1B[{len(PROGRESS_MESSAGE_LINES)}A" + "".join(
 
 GENERATING_MESSAGE = "Generating vanity wallet" + "\n" * len(PROGRESS_MESSAGE_LINES)
 
-ADDRESS_GENERATED_MESSAGE = "{} vanity address generated!\n{}\n{}"
+WALLET_GENERATED_MESSAGE = "{} vanity wallet generated!\n{}\n{}"
