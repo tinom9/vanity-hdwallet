@@ -8,7 +8,8 @@ from vanityhdwallet.helpers import (
     calculate_estimated_tries,
     check_address_vanity,
     check_vanity_validity,
-    generate_hd_keypair,
+    derive_address,
+    generate_mnemonic,
 )
 
 
@@ -78,11 +79,10 @@ def test_calculate_estimated_time(inputs, output):
     ["currency"],
     [[ETH], [BTC]],
 )
-def test_generate_hd_keypair(currency):
+def test_derive_address(currency):
+    mnemonic = generate_mnemonic()
     hdwallet = HDWallet(symbol=currency, use_default_path=True)
-    mnemonic, address = generate_hd_keypair(hdwallet)
-    # Test that the generated mnemonic is a string with 12 words.
-    assert mnemonic.count(" ") == 12 - 1
+    address = derive_address(hdwallet, mnemonic)
     # Test that the selected address starts with the given address prefix.
     assert address.startswith(CURRENCY_PREFIX_MAP[currency])
 
