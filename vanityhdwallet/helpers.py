@@ -6,6 +6,7 @@ from threading import Event
 
 from hdwallet import HDWallet
 from hdwallet.utils import generate_mnemonic
+from humanfriendly import format_timespan
 
 from vanityhdwallet.currencies import (
     CURRENCY_ADDRESS_MAP,
@@ -83,9 +84,12 @@ def find_vanity_wallet(
             )
             print(
                 PROGRESS_MESSAGE.format(
-                    count, estimated_tries, time_elapsed, estimated_time
+                    count,
+                    estimated_tries,
+                    format_timespan(int(time_elapsed)),
+                    format_timespan(int(estimated_time)),
                 ),
-                end="\n",
+                end="",
                 flush=True,
             )
         mnemonic = generate_mnemonic()
