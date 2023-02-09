@@ -2,7 +2,7 @@ from hdwallet.symbols import BTC, ETH
 
 CURRENCIES = [ETH, BTC]
 
-CURRENCY_REGEX_MAP = {ETH: r"^[0-9a-fA-F]{,40}$", BTC: r"^[0-9a-hj-np-z]{,38}$"}
+CURRENCY_REGEX_MAP = {ETH: r"^[0-9a-fA-F]{,40}$", BTC: r"^[02-9ac-hj-np-z]{,38}$"}
 
 CURRENCY_OPTIONS_MAP = {ETH: (22, 16), BTC: (34, 34)}
 

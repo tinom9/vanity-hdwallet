@@ -26,11 +26,14 @@ from vanityhdwallet.helpers import (
         # Over maximum length is invalid.
         [[ETH, "a" * 42], False],
         # Allowed characters is valid.
-        [[BTC, "abc1234"], True],
+        [[BTC, "ac234"], True],
         # Uppercase allowed characters is invalid.
-        [[BTC, "ABC1234"], False],
+        [[BTC, "AC234"], False],
         # Non-allowed characters is invalid.
-        [[BTC, "abi1234"], False],
+        [[BTC, "1"], False],
+        [[BTC, "b"], False],
+        [[BTC, "i"], False],
+        [[BTC, "o"], False],
     ],
 )
 def test_check_vanity_validity(inputs, output):
