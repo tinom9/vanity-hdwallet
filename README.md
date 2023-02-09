@@ -1,8 +1,10 @@
 # Vanity hierarchical deterministic wallet generator
 
+Create wallets that derive vanity addresses for Ethereum and Bitcoin blockchains.
+
 ## Requirements
 
-Python `^3.10` and Poetry are required to run this project.
+`python=^3.10` and `poetry` are required to run this project.
 
 ## Set-up
 
@@ -13,8 +15,9 @@ poetry install
 poetry shell
 ```
 
-## Usage
+## CLI Usage
 
 ```bash
-python generate.py --vanity abc123
+python cli.py generate -v abc123 -c ETH --case-sensitive
+python cli.py multigenerate -v abc123,xyz -c ETH,BTC
 ```
