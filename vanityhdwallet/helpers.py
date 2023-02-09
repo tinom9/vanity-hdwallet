@@ -65,7 +65,7 @@ def find_vanity_wallet(
     ]
     if singer:
         count = 0
-        start_time = time.time()
+        N = mp.cpu_count()
         estimated_tries = reduce(
             (lambda x, y: x * y),
             [
@@ -73,7 +73,7 @@ def find_vanity_wallet(
                 for i in range(len(currencies))
             ],
         )
-        N = mp.cpu_count()
+        start_time = time.time()
     while active.is_set():
         if singer:
             count += N

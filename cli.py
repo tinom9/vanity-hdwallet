@@ -54,7 +54,7 @@ class VanityHDWallet:
             if not check_vanity_validity(currencies[i], vanity)
         ]:
             invalid_vanities, corresponding_currencies = zip(
-                invalid_vanities_with_currencies
+                *invalid_vanities_with_currencies
             )
             raise InvalidVanityException(
                 invalid_vanities[0], corresponding_currencies[0]
