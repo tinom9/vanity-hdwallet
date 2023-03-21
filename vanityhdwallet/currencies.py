@@ -10,7 +10,7 @@ CURRENCY_PREFIX_MAP = {ETH: "0x", BTC: "bc1q"}
 
 CURRENCY_PATH_MAP = {
     ETH: "m/44'/60'/0'/0/0",
-    BTC: "m/44'/0'/0'/0/0",
+    BTC: "m/84'/0'/0'/0/0",
 }
 
 CURRENCY_ADDRESS_MAP = {ETH: "p2pkh", BTC: "p2wpkh"}
