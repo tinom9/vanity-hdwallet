@@ -1,9 +1,7 @@
 import argparse
 import sys
 
-from hdwallet.symbols import ETH
-
-from vanityhdwallet.currencies import CURRENCIES
+from vanityhdwallet.currencies import CURRENCIES, ETH
 from vanityhdwallet.exceptions import InvalidCurrencyException, InvalidVanityException
 from vanityhdwallet.helpers import (
     check_vanity_validity,

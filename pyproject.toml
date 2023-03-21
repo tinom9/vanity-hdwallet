@@ -7,8 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-hdwallet = "2.2.1"
 humanfriendly = "^10.0"
+bip44 = "^0.1.3"
+bech32 = "^1.2.0"
+web3 = "^6.0.0"
+mnemonic = "^0.20"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^0.991"

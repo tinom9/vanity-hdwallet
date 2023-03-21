@@ -1,15 +1,11 @@
 import pytest
-from hdwallet import HDWallet
-from hdwallet.symbols import BTC, ETH
 
-from vanityhdwallet.currencies import CURRENCY_PREFIX_MAP
+from vanityhdwallet.currencies import BTC, ETH
 from vanityhdwallet.helpers import (
     calculate_estimated_time,
     calculate_estimated_tries,
     check_address_vanity,
     check_vanity_validity,
-    derive_address,
-    generate_mnemonic,
 )
 
 
@@ -73,18 +69,6 @@ def test_calculate_estimated_tries(inputs, output):
 )
 def test_calculate_estimated_time(inputs, output):
     assert output == calculate_estimated_time(*inputs)
-
-
-@pytest.mark.parametrize(
-    ["currency"],
-    [[ETH], [BTC]],
-)
-def test_derive_address(currency):
-    mnemonic = generate_mnemonic()
-    hdwallet = HDWallet(symbol=currency, use_default_path=True)
-    address = derive_address(hdwallet, mnemonic)
-    # Test that the selected address starts with the given address prefix.
-    assert address.startswith(CURRENCY_PREFIX_MAP[currency])
 
 
 @pytest.mark.parametrize(
