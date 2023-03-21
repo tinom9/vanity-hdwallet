@@ -3,7 +3,7 @@ from bip44 import Wallet
 from coincurve import PublicKey
 
 from vanityhdwallet.cryptography import keccak256, ripemd160, sha3
-from vanityhdwallet.currencies import BTC, CURRENCY_PATH_MAP, ETH
+from vanityhdwallet.currencies import ATOM, BTC, CURRENCY_PATH_MAP, ETH
 
 
 def to_checksum_address(address: str) -> str:
@@ -38,9 +38,16 @@ def get_bitcoin_address(mnemonic: str) -> str:
     return get_bech32_address(pk, "bc", 0)
 
 
+def get_cosmos_address(mnemonic: str) -> str:
+    w = Wallet(mnemonic)
+    pk = w.derive_public_key(CURRENCY_PATH_MAP[ATOM])
+    return get_bech32_address(pk, "cosmos")
+
+
 CURRENCY_ADDRESS_FUNCTION_MAP = {
     ETH: get_ethereum_address,
     BTC: get_bitcoin_address,
+    ATOM: get_cosmos_address,
 }
 
 
