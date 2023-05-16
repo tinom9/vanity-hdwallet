@@ -1,9 +1,9 @@
 import bech32
-from bip44 import Wallet
 from coincurve import PublicKey
 
 from vanityhdwallet.cryptography import keccak256, ripemd160, sha3
 from vanityhdwallet.currencies import ATOM, BTC, CURRENCY_PATH_MAP, ETH
+from vanityhdwallet.derivations import derive_public_key
 
 
 def to_checksum_address(address: str) -> str:
@@ -26,21 +26,18 @@ def get_bech32_address(pk: bytes, hrp: str, version: int | None = None) -> str:
 
 
 def get_ethereum_address(mnemonic: str) -> str:
-    w = Wallet(mnemonic)
-    pk = w.derive_public_key(CURRENCY_PATH_MAP[ETH])
+    pk = derive_public_key(mnemonic, CURRENCY_PATH_MAP[ETH])
     pk = PublicKey(pk).format(False)[1:]
     return to_checksum_address(f"{keccak256(pk)[-20:].hex()}")
 
 
 def get_bitcoin_address(mnemonic: str) -> str:
-    w = Wallet(mnemonic)
-    pk = w.derive_public_key(CURRENCY_PATH_MAP[BTC])
+    pk = derive_public_key(mnemonic, CURRENCY_PATH_MAP[BTC])
     return get_bech32_address(pk, "bc", 0)
 
 
 def get_cosmos_address(mnemonic: str) -> str:
-    w = Wallet(mnemonic)
-    pk = w.derive_public_key(CURRENCY_PATH_MAP[ATOM])
+    pk = derive_public_key(mnemonic, CURRENCY_PATH_MAP[ATOM])
     return get_bech32_address(pk, "cosmos")
 
 
