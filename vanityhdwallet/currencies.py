@@ -4,6 +4,8 @@ CURRENCIES = [ETH, BTC, ATOM]
 
 CHECKSUMMABLE_CURRENCIES = [ETH]
 
+PHRASE_LENGHTS = [12, 15, 18, 21, 24]
+
 CURRENCY_REGEX_MAP = {
     ETH: r"^[0-9a-fA-F]{,40}$",
     BTC: r"^[02-9ac-hj-np-z]{,38}$",

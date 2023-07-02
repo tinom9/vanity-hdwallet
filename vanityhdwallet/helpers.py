@@ -22,7 +22,8 @@ from vanityhdwallet.messages import (
 )
 
 
-def generate_mnemonic(language: str = "english", strength: int = 128) -> str:
+def generate_mnemonic(language: str = "english", length: int = 12) -> str:
+    strength = int(length * 32 / 3)
     return Mnemonic(language=language).generate(strength=strength)
 
 
@@ -64,6 +65,7 @@ def check_address_vanity(
 def find_vanity_wallet(
     currencies: list[str],
     vanities: list[str],
+    words: int,
     case_sensitive: bool,
     active: Event,
     singer: bool,
@@ -96,7 +98,7 @@ def find_vanity_wallet(
                 end="",
                 flush=True,
             )
-        mnemonic = generate_mnemonic()
+        mnemonic = generate_mnemonic(length=words)
         addresses = []
         for i, currency in enumerate(currencies):
             address = get_currency_address(currency, mnemonic)
@@ -111,7 +113,7 @@ def find_vanity_wallet(
 
 
 def generate(
-    currencies: list[str], vanities: list[str], case_sensitive: bool
+    currencies: list[str], vanities: list[str], words: int, case_sensitive: bool
 ) -> tuple[str, list[str]]:
     N = mp.cpu_count()
     with mp.Pool(processes=N) as p:
@@ -120,24 +122,26 @@ def generate(
         active.set()
         wallets = p.starmap(
             find_vanity_wallet,
-            [(currencies, vanities, case_sensitive, active, True)]
-            + [(currencies, vanities, case_sensitive, active, False)] * (N - 1),
+            [(currencies, vanities, words, case_sensitive, active, True)]
+            + [(currencies, vanities, words, case_sensitive, active, False)] * (N - 1),
         )
     mnemonic, addresses = next(wallet for wallet in wallets if wallet)
     return mnemonic, addresses
 
 
-def generate_vanity_wallet(currency: str, vanity: str, case_sensitive: bool) -> None:
+def generate_vanity_wallet(
+    currency: str, vanity: str, words: int, case_sensitive: bool
+) -> None:
     print(GENERATING_MESSAGE)
-    mnemonic, addresses = generate([currency], [vanity], case_sensitive)
+    mnemonic, addresses = generate([currency], [vanity], words, case_sensitive)
     print(WALLET_GENERATED_MESSAGE.format(currency, mnemonic, addresses[0]))
 
 
 def generate_multi_vanity_wallet(
-    currencies: list[str], vanities: list[str], case_sensitive: bool
+    currencies: list[str], vanities: list[str], words: int, case_sensitive: bool
 ) -> None:
     print(GENERATING_MESSAGE)
-    mnemonic, addresses = generate(currencies, vanities, case_sensitive)
+    mnemonic, addresses = generate(currencies, vanities, words, case_sensitive)
     print(
         WALLET_GENERATED_MESSAGE.format(
             ", ".join(currencies),

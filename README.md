@@ -19,6 +19,6 @@ poetry shell
 ## CLI Usage
 
 ```bash
-python cli.py generate -v abc123 -c ETH --case-sensitive
+python cli.py generate -v abc123 -c ETH -w 24 --case-sensitive
 python cli.py multigenerate -v abc123,xyz -c ETH,BTC
 ```

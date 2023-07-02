@@ -1,4 +1,4 @@
-from vanityhdwallet.currencies import CURRENCIES
+from vanityhdwallet.currencies import CURRENCIES, PHRASE_LENGHTS
 
 
 class InvalidCurrencyException(Exception):
@@ -12,3 +12,11 @@ class InvalidCurrencyException(Exception):
 class InvalidVanityException(Exception):
     def __init__(self, vanity: str, currency: str):
         super().__init__(f"{vanity} is not a valid {currency} vanity.")
+
+
+class InvalidPhraseLengthException(Exception):
+    def __init__(self, length: int):
+        super().__init__(
+            f"{length} is not a valid phrase length. Supported lengths are: "
+            f"{', '.join(PHRASE_LENGHTS)}."
+        )
