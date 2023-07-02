@@ -1,6 +1,6 @@
 import pytest
 
-from vanityhdwallet.currencies import BTC, ETH
+from vanityhdwallet.currencies import ATOM, BTC, ETH
 from vanityhdwallet.helpers import (
     calculate_estimated_time,
     calculate_estimated_tries,
@@ -42,14 +42,12 @@ def test_check_vanity_validity(inputs, output):
     # Output: estimated_tries.
     ["inputs", "output"],
     [
-        # Case-insensitive ETH returns 16 options to the power of 7 characters vanity.
-        [[ETH, "abc1234", False], 16**7],
-        # Case-sensitive ETH returns 22 options to the power of 7 characters vanity.
-        [[ETH, "abc1234", True], 22**7],
-        # Case-insensitive BTC returns 34 options to the power of 7 characters vanity.
-        [[BTC, "abc1234", False], 34**7],
-        # Case-sensitive BTC returns 34 options to the power of 7 characters vanity.
-        [[BTC, "abc1234", False], 34**7],
+        [[ETH, "abc1234", False], 186065279],
+        [[ETH, "abc1234", True], 1488522235],
+        [[BTC, "abc1234", False], 54318033479],
+        [[BTC, "abc1234", True], 54318033479],
+        [[ATOM, "abc1234", False], 54318033479],
+        [[ATOM, "abc1234", True], 54318033479],
     ],
 )
 def test_calculate_estimated_tries(inputs, output):

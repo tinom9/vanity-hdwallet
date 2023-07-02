@@ -1,3 +1,4 @@
+import math
 import multiprocessing as mp
 import re
 import time
@@ -9,6 +10,7 @@ from mnemonic import Mnemonic
 
 from vanityhdwallet.addresses import get_currency_address
 from vanityhdwallet.currencies import (
+    CHECKSUMMABLE_CURRENCIES,
     CURRENCY_OPTIONS_MAP,
     CURRENCY_PREFIX_MAP,
     CURRENCY_REGEX_MAP,
@@ -28,10 +30,18 @@ def check_vanity_validity(currency: str, vanity: str) -> bool:
     return bool(re.match(CURRENCY_REGEX_MAP[currency], vanity))
 
 
+def calculate_difficulty(currency: str, vanity: str, case_sensitive: bool) -> int:
+    options = CURRENCY_OPTIONS_MAP[currency]
+    difficulty = options ** len(vanity)
+    if case_sensitive and currency in CHECKSUMMABLE_CURRENCIES:
+        difficulty *= 2 ** sum(c.isalpha() for c in vanity)
+    return difficulty
+
+
 def calculate_estimated_tries(currency: str, vanity: str, case_sensitive: bool) -> int:
-    max_options, min_options = CURRENCY_OPTIONS_MAP[currency]
-    options = max_options if case_sensitive else min_options
-    return options ** len(vanity)
+    difficulty = calculate_difficulty(currency, vanity, case_sensitive)
+    estimated_tries = int(math.log(0.5) / math.log(1 - 1 / difficulty))
+    return estimated_tries
 
 
 def calculate_estimated_time(estimated_tries: int, tries: int, time_elapsed: float):

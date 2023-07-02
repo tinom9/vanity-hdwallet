@@ -1,6 +1,7 @@
 # Vanity hierarchical deterministic wallet generator
 
-Create wallets that derive vanity addresses for Ethereum and Bitcoin blockchains.
+Create wallets that derive vanity addresses for Ethereum, Bitcoin, and Cosmos
+blockchains.
 
 ## Requirements
 
