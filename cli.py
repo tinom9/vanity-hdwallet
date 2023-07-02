@@ -1,9 +1,16 @@
 import argparse
 import sys
 
-from vanityhdwallet.currencies import CURRENCIES, ETH, PHRASE_LENGHTS
+from vanityhdwallet.currencies import (
+    CURRENCIES,
+    ENGLISH,
+    ETH,
+    LANGUAGES,
+    PHRASE_LENGHTS,
+)
 from vanityhdwallet.exceptions import (
     InvalidCurrencyException,
+    InvalidLanguageException,
     InvalidPhraseLengthException,
     InvalidVanityException,
 )
@@ -26,30 +33,36 @@ class VanityHDWallet:
         parser = argparse.ArgumentParser()
         parser.add_argument("-v", "--vanity", type=str)
         parser.add_argument("-c", "--currency", type=str, default=ETH)
+        parser.add_argument("-l", "--language", type=str, default=ENGLISH)
         parser.add_argument("-w", "--words", type=int, default=12)
         parser.add_argument("--case-sensitive", action="store_true")
         args = parser.parse_args(sys.argv[2:])
         vanity = args.vanity
         currency = args.currency.upper()
+        language = args.language
         words = args.words
         case_sensitive = args.case_sensitive
         if not currency in CURRENCIES:
             raise InvalidCurrencyException(currency)
         if not check_vanity_validity(currency, vanity):
             raise InvalidVanityException(vanity, currency)
+        if not language in LANGUAGES:
+            raise InvalidLanguageException(language)
         if not words in PHRASE_LENGHTS:
             raise InvalidPhraseLengthException(words)
-        generate_vanity_wallet(currency, vanity, words, case_sensitive)
+        generate_vanity_wallet(currency, vanity, language, words, case_sensitive)
 
     def multigenerate(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("-v", "--vanities", type=str)
         parser.add_argument("-c", "--currencies", type=str, default=ETH)
+        parser.add_argument("-l", "--language", type=str, default=ENGLISH)
         parser.add_argument("-w", "--words", type=int, default=12)
         parser.add_argument("--case-sensitive", action="store_true")
         args = parser.parse_args(sys.argv[2:])
         vanities = args.vanities.split(",")
         currencies = [currency.upper() for currency in args.currencies.split(",")]
+        language = args.language
         words = args.words
         case_sensitive = args.case_sensitive
         if invalid_currencies := [
@@ -67,9 +80,13 @@ class VanityHDWallet:
             raise InvalidVanityException(
                 invalid_vanities[0], corresponding_currencies[0]
             )
+        if not language in LANGUAGES:
+            raise InvalidLanguageException(language)
         if not words in PHRASE_LENGHTS:
             raise InvalidPhraseLengthException(words)
-        generate_multi_vanity_wallet(currencies, vanities, words, case_sensitive)
+        generate_multi_vanity_wallet(
+            currencies, vanities, language, words, case_sensitive
+        )
 
 
 if __name__ == "__main__":
