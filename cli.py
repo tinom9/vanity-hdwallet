@@ -42,13 +42,13 @@ class VanityHDWallet:
         language = args.language
         words = args.words
         case_sensitive = args.case_sensitive
-        if not currency in CURRENCIES:
+        if currency not in CURRENCIES:
             raise InvalidCurrencyException(currency)
         if not check_vanity_validity(currency, vanity):
             raise InvalidVanityException(vanity, currency)
-        if not language in LANGUAGES:
+        if language not in LANGUAGES:
             raise InvalidLanguageException(language)
-        if not words in PHRASE_LENGHTS:
+        if words not in PHRASE_LENGHTS:
             raise InvalidPhraseLengthException(words)
         generate_vanity_wallet(currency, vanity, language, words, case_sensitive)
 
@@ -66,7 +66,7 @@ class VanityHDWallet:
         words = args.words
         case_sensitive = args.case_sensitive
         if invalid_currencies := [
-            currency for currency in currencies if not currency in CURRENCIES
+            currency for currency in currencies if currency not in CURRENCIES
         ]:
             raise InvalidCurrencyException(invalid_currencies[0])
         if invalid_vanities_with_currencies := [
@@ -80,9 +80,9 @@ class VanityHDWallet:
             raise InvalidVanityException(
                 invalid_vanities[0], corresponding_currencies[0]
             )
-        if not language in LANGUAGES:
+        if language not in LANGUAGES:
             raise InvalidLanguageException(language)
-        if not words in PHRASE_LENGHTS:
+        if words not in PHRASE_LENGHTS:
             raise InvalidPhraseLengthException(words)
         generate_multi_vanity_wallet(
             currencies, vanities, language, words, case_sensitive
